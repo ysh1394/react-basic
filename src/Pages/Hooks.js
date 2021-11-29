@@ -1,22 +1,115 @@
-import React, { useState } from "react";
-import MuiButton from "../Components/MuiButton";
+import React, { useState, forwardRef, useEffect } from "react";
+import UseStateSample from "../Components/Hooks/UseStateSample";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import UseEffectSample from "../Components/Hooks/UseEffectSample";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 
 const Hooks = () => {
-  const [value, setValue] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+  const [mount, setMount] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const [inputValue, setInputValue] = useState({
+    name: "",
+    nickname: "",
+  });
+  const [isMount, setIsMount] = useState(false);
+
+  const { open, vertical, horizontal } = mount;
+
+  useEffect(() => {
+    setMount((values) => ({ ...values, open: true }));
+
+    return () => alert("UNMOUNT");
+  }, []);
+
+  const handleClose = (e, reason) => {
+    console.log("reason >>", reason);
+
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setMount((values) => ({ ...values, open: false }));
+  };
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   return (
     <>
-      <p>
-        현재 카운터 값은 <b>{value}</b>입니다.
-      </p>
-      <MuiButton
-        onClick={() => setValue(value + 1)}
-        sx={{ width: "120px", margin: "12px 0" }}
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        // autoHideDuration={6000}
+        // onClose={handleClose}
       >
-        +1
-      </MuiButton>
-      <MuiButton onClick={() => setValue(value - 1)} sx={{ width: "120px" }}>
-        -1
-      </MuiButton>
+        <Alert onClose={handleClose} severity='success' sx={{ width: "100%" }}>
+          최초 마운트 시 발생됩니다. 페이지가 바뀌면 사라집니다.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={!open}
+        // autoHideDuration={6000}
+        // onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity='error' sx={{ width: "100%" }}>
+          언마운트 상태입니다. 보이지 않습니다.
+        </Alert>
+      </Snackbar>
+      <Accordion
+        expanded={expanded === "panel1"}
+        onChange={handleChange("panel1")}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panel1a-content'
+          id='panel1a-header'
+        >
+          <Typography>useState 기본 예제</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <UseStateSample
+            isMount={isMount}
+            setIsMount={setIsMount}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+          />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        expanded={expanded === "panel2"}
+        onChange={handleChange("panel2")}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panel1a-content'
+          id='panel1a-header'
+        >
+          <Typography>useEffect 기본 예제</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <UseEffectSample
+            expanded={expanded}
+            isMount={isMount}
+            setIsMount={setIsMount}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+          />
+        </AccordionDetails>
+      </Accordion>
     </>
   );
 };
