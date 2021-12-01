@@ -1,13 +1,14 @@
 import React, { useState, forwardRef, useEffect } from "react";
-import UseStateSample from "../Components/Hooks/UseStateSample";
+import UseStateSample from "../Components/HooksSamples/UseStateSample";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import UseEffectSample from "../Components/Hooks/UseEffectSample";
+import UseEffectSample from "../Components/HooksSamples/UseEffectSample";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import UseReducerSample from "../Components/HooksSamples/UseReducerSample";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -31,7 +32,7 @@ const Hooks = () => {
   useEffect(() => {
     setMount((values) => ({ ...values, open: true }));
 
-    return () => alert("UNMOUNT");
+    return () => setMount((values) => ({ ...values, open: false }));
   }, []);
 
   const handleClose = (e, reason) => {
@@ -47,6 +48,7 @@ const Hooks = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
   return (
     <>
       <Snackbar
@@ -108,6 +110,21 @@ const Hooks = () => {
             inputValue={inputValue}
             setInputValue={setInputValue}
           />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        expanded={expanded === "panel3"}
+        onChange={handleChange("panel3")}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panel1a-content'
+          id='panel1a-header'
+        >
+          <Typography>useReducer 기본 예제</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <UseReducerSample />
         </AccordionDetails>
       </Accordion>
     </>
