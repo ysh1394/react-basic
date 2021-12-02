@@ -9,6 +9,7 @@ import UseEffectSample from "../Components/HooksSamples/UseEffectSample";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import UseReducerSample from "../Components/HooksSamples/UseReducerSample";
+import UseMemoSample from "../Components/HooksSamples/UseMemoSample";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -125,6 +126,23 @@ const Hooks = () => {
         </AccordionSummary>
         <AccordionDetails>
           <UseReducerSample />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        expanded={expanded === "panel4"}
+        onChange={handleChange("panel4")}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panel1a-content'
+          id='panel1a-header'
+        >
+          <Typography>
+            useMemo, useCallback, useRef, customHooks 기본 예제
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <UseMemoSample />
         </AccordionDetails>
       </Accordion>
     </>
